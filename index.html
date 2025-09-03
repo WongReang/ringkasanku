@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Summarizer Mini</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-start py-10">
+
+<h1 class="text-3xl font-bold mb-6 text-center">Text Summarizer Mini</h1>
+
+<!-- ====== IKLAN ADSTERA (TOP) ====== -->
+<script type="text/javascript">
+	atOptions = {
+		'key' : '0befeccefce005e8378e259f13b06ff7',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/0befeccefce005e8378e259f13b06ff7/invoke.js"></script>
+
+<div class="w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg mt-6">
+    <label class="block mb-2 font-semibold">Masukkan Teks atau Upload File (.txt)</label>
+    <textarea id="inputText" class="w-full h-40 p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan teks di sini..."></textarea>
+    <input type="file" id="fileInput" accept=".txt" class="mb-4">
+    <div class="flex gap-3 mb-4">
+        <button onclick="summarizeText()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Ringkas Teks</button>
+        <button onclick="copyText()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Salin Ringkasan</button>
+    </div>
+    <div id="output" class="bg-gray-50 p-4 rounded border min-h-[80px]"></div>
+</div>
+
+<!-- ====== IKLAN ADSTERA (SIDEBAR) ====== -->
+<script type="text/javascript">
+	atOptions = {
+		'key' : 'd53c0a10bb4175ac9b253158374772e4',
+		'format' : 'iframe',
+		'height' : 600,
+		'width' : 160,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/d53c0a10bb4175ac9b253158374772e4/invoke.js"></script>
+
+<!-- ====== IKLAN ADSTERA (SCRIPT LAIN) ====== -->
+<script type='text/javascript' src='//pl27559961.revenuecpmgate.com/aa/e4/14/aae414a86cc38e0fe3ad5f5ae9ca5c45.js'></script>
+
+<script async="async" data-cfasync="false" src="//pl27569850.revenuecpmgate.com/aeb29bd2c5dd9dc219d1bd68198c36a5/invoke.js"></script>
+<div id="container-aeb29bd2c5dd9dc219d1bd68198c36a5"></div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const inputText = document.getElementById('inputText');
+
+fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if(file && file.type === "text/plain") {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            inputText.value = e.target.result;
+        }
+        reader.readAsText(file);
+    } else {
+        alert("File harus berformat .txt");
+    }
+});
+
+function summarizeText() {
+    let text = inputText.value;
+    if(!text) { alert('Teks kosong!'); return; }
+
+    let sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+
+    let wordFreq = {};
+    text.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).forEach(w=>{
+        if(w.length>2) wordFreq[w] = (wordFreq[w]||0)+1;
+    });
+
+    let scored = sentences.map(s => {
+        let score = 0;
+        s.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).forEach(w=>{
+            if(wordFreq[w]) score += wordFreq[w];
+        });
+        return {sentence: s.trim(), score: score};
+    });
+
+    scored.sort((a,b)=>b.score-a.score);
+    let summary = scored.slice(0,3).map(s=>s.sentence).join(' ');
+
+    document.getElementById('output').innerText = summary;
+}
+
+function copyText() {
+    let text = document.getElementById('output').innerText;
+    if(!text) { alert('Belum ada ringkasan!'); return; }
+    navigator.clipboard.writeText(text);
+    alert('Ringkasan disalin!');
+}
+</script>
+
+</body>
+</html>
